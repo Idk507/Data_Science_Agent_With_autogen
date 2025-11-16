@@ -8,7 +8,7 @@
 1. **Orchestrator Agent**  
    - Central “director” that sequences tasks, routes data/artifacts, aggregates logs & errors.  
    - Invokes sub‑agents based on pipeline stage and dependencies.  
-
+  
 2. **Data Ingestion Agent**  
    - Connects to data sources (CSV, SQL, Azure Data Lake).  
    - Validates schema & sample counts.  
