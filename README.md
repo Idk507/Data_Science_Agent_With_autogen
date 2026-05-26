@@ -1,101 +1,229 @@
-# Data_Science_Agent_With_autogen
+# AutoDS: Multi-Agent Data Science Platform
 
- **“AutoDS: A Multi‑Agent Data Science & Analytics Platform”** built on Autogen + Azure AI Services. It splits the end‑to‑end pipeline into specialized agents, each responsible for one stage—from raw data to deployable model and insights.
+A **local-first** multi-agent data science platform powered by **Azure OpenAI**. AutoDS automates the end-to-end data science workflow through specialized AI agents that collaborate to deliver actionable insights.
 
----
+## ✅ Current Status (Phase 0-2 Complete)
 
-## 1. High‑Level Architecture & Workflow  
-1. **Orchestrator Agent**  
-   - Central “director” that sequences tasks, routes data/artifacts, aggregates logs & errors.  
-   - Invokes sub‑agents based on pipeline stage and dependencies.  
-  
-2. **Data Ingestion Agent**  
-   - Connects to data sources (CSV, SQL, Azure Data Lake).  
-   - Validates schema & sample counts.  
-   - Stores raw snapshot in Azure Blob Storage.
-
-3. **Exploratory Data Analysis (EDA) Agent**  
-   - Generates summary statistics via pandas and Azure ML DataPrep.  
-   - Creates visualizations (histograms, correlation heatmaps) using matplotlib in a code‑exec sandbox.  
-   - Produces an “EDA Report” summary with Azure OpenAI for natural‑language interpretation.
-
-4. **Data Cleaning Agent**  
-   - Detects missing values/outliers.  
-   - Suggests imputation or removal strategies via Autogen’s “chain‑of‑thought” prompts.  
-   - Applies transformations and version‑controls cleaned data.
-
-5. **Feature Engineering Agent**  
-   - Recommends feature creation (polynomials, encodings, embeddings).  
-   - Executes transformations (One‑Hot, scaling) and evaluates feature importance with a quick RandomForest.
-
-6. **Model Selection & Training Agent**  
-   - Spins up Azure ML pipelines.  
-   - Tries multiple algorithms (e.g., LinearModels, Tree‑based, AutoML).  
-   - Logs metrics to Azure ML Experiment Tracker.
-
-7. **Hyperparameter Tuning Agent**  
-   - Uses Azure ML’s HyperDrive or custom Bayesian optimizer.  
-   - Iterates on top‑n configurations; reports best trial.
-
-8. **Evaluation & Validation Agent**  
-   - Runs cross‑validation, computes metrics (accuracy, RMSE, AUC).  
-   - Checks fairness, data drift via Azure ML ModelGuardrails.  
-   - Summarizes results and flags potential issues.
-
-9. **Explainability Agent**  
-   - Leverages SHAP or LIME in a secure sandbox.  
-   - Generates per‑feature SHAP plots and plain‑English explanations via Azure OpenAI.
-
-10. **Report & Dashboard Agent**  
-    - Assembles final analysis: narrative summary, key charts, top features, model performance.  
-    - Publishes to Azure Power BI or exports a Markdown/HTML report.
-
-11. **Deployment & Monitoring Agent**  
-    - Wraps model in an Azure Container Instance or Function.  
-    - Sets up endpoint, generates test calls.  
-    - Configures monitoring: latency, error rates, prediction drift.
-
-12. **Memory & Knowledge Agent**  
-    - Archives artifacts (data snapshots, models, reports) in Azure Cognitive Search or Cosmos DB.  
-    - Answers retrospective queries: “What was last month’s best model?”  
+| Phase | Status | Description |
+|-------|--------|-------------|
+| Phase 0 | ✅ Complete | Setup, Config, Orchestrator Skeleton |
+| Phase 1 | ✅ Complete | Data Ingestion Agent (Local + URL) |
+| Phase 2 | ✅ Complete | EDA Agent + Reporting with AI Insights |
+| Phase 3 | ⏳ In Progress | Memory & Context Integration (ChromaDB) |
+| Phase 4 | 🔜 Planned | Data Cleaning & Feature Engineering |
+| Phase 5 | 🔜 Planned | Modeling, Evaluation & Explainability |
+| Phase 6 | 🔜 Planned | Deployment & Monitoring |
 
 ---
 
-## 2. Module Breakdown
+## 🚀 Quick Start
 
-| Module                         | Core Responsibilities                                  | Tech Stack / Azure Services                      |
-|--------------------------------|--------------------------------------------------------|--------------------------------------------------|
-| **Ingestion**                  | Connect, validate, version raw data                    | pandas, Azure Data Factory, Blob Storage         |
-| **EDA**                        | Stats, plots, auto‑commentary                          | pandas, matplotlib, Azure ML DataPrep, OpenAI    |
-| **Cleaning**                   | Null/o u tlier handling, schema enforcement            | pandas, Autogen prompt chains                    |
-| **Feature Engineering**        | Encoding, scaling, embedding, importance ranking       | scikit‑learn, Azure ML Feature Store             |
-| **Modeling**                   | Training, selection, experiment logging                | Azure ML, AutoML, scikit‑learn                   |
-| **HPO**                        | Bayesian / random search, parallel runs                | Azure ML HyperDrive, custom Python scripts       |
-| **Evaluation**                 | Metrics, validation, fairness checks                   | Azure ML ModelGuardrails, scikit‑learn           |
-| **Explainability**             | SHAP/LIME analysis, text summaries                     | SHAP, LIME, OpenAI summarization                 |
-| **Reporting**                  | Collate narratives, visuals, dashboards                | Markdown/HTML, Power BI, Azure Functions         |
-| **Deployment**                 | Containerization, endpoint, health checks              | Azure Container Instances, Functions             |
-| **Monitoring & Drift**         | Telemetry, drift detection, alerting                   | Azure Monitor, Application Insights             |
-| **Memory & Knowledge**         | Artifact storage & QA‑style retrieval                  | Azure Cognitive Search, Cosmos DB                |
+### 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Configure Environment
+
+Create a `.env` file with your Azure OpenAI credentials:
+
+```env
+AZURE_OPENAI_ENDPOINT=https://your-resource.cognitiveservices.azure.com/
+AZURE_OPENAI_API_KEY=your-api-key
+AZURE_OPENAI_DEPLOYMENT=gpt-4.1
+AZURE_OPENAI_API_VERSION=2024-12-01-preview
+```
+
+### 3. Initialize the Project
+
+```bash
+python autods_cli.py init
+```
+
+### 4. Run a Workflow
+
+```bash
+# Run EDA on the demo sales dataset
+python autods_cli.py run --dataset demo_sales --goal eda_report
+
+# Run EDA on the Titanic dataset (loaded from URL)
+python autods_cli.py run --dataset titanic --goal eda_report
+```
 
 ---
 
-## 3. Multi‑Agent Collaboration Patterns
+## 📁 Project Structure
 
-- **Pipeline Chain**: Orchestrator calls each agent in sequence, passing outputs as inputs.  
-- **Swarm/Ensemble**: Multiple modeling agents run in parallel; Orchestrator aggregates their metrics.  
-- **Controller‑Worker**: A “Controller” Agent delegates mini‑tasks (e.g., feature subsets) to multiple Feature Engineering Agents.  
-- **Conversational Interface**: Front‑end Agent that lets analysts ask questions (“Show me feature importances”), routed to Memory & Explainability Agents.
+```
+autods/
+├── __init__.py           # Package init
+├── config.py             # Configuration management (Pydantic)
+├── registry.py           # Dataset registry (loads datasets.yaml)
+├── storage.py            # Data loading from files/URLs
+├── memory.py             # ChromaDB-based persistent memory
+└── agents/
+    ├── __init__.py       # Agent exports
+    ├── base_agent.py     # Abstract base agent with Azure OpenAI
+    ├── ingestion_agent.py # Data loading and schema extraction
+    ├── eda_agent.py      # Exploratory data analysis + LLM insights
+    ├── reporting_agent.py # Markdown report generation
+    └── orchestrator.py   # Central workflow coordinator
+
+autods_cli.py             # Command-line interface
+datasets.yaml             # Dataset registry configuration
+requirements.txt          # Python dependencies
+.env                      # Azure OpenAI credentials (not in repo)
+```
 
 ---
 
-## 4. Getting Started
+## 🤖 Agent Architecture
 
-1. **Define Agent Interfaces**: With Autogen, write JSON/YAML descriptors for each agent’s inputs, outputs, and tools.  
-2. **Bootstrap a Minimal MVP**:  
-   - Build Ingestion → EDA → Reporting chain.  
-   - Use Azure OpenAI to generate EDA commentary.  
-3. **Iterate & Expand**: Add Cleaning, Feature, Modeling agents one by one—test each in isolation first.  
-4. **Wire up Azure ML**: Containerize training code; register models and metrics.  
-5. **Deploy Orchestrator**: Host on Azure Functions or Kubernetes, using Autogen’s orchestration APIs.  
+### Orchestrator Agent
+Central coordinator that sequences the workflow:
+- Accepts `dataset_id` and `goal` parameters
+- Routes data between specialized agents
+- Logs execution progress and results
+- Stores workflow artifacts in memory
 
+### Ingestion Agent
+Loads data from various sources:
+- Local CSV, Parquet, JSON, Excel files
+- Remote URLs (CSV)
+- Extracts schema information (dtypes, missing values, memory usage)
+
+### EDA Agent
+Performs exploratory data analysis:
+- Summary statistics (mean, std, min, max)
+- Missing value detection
+- Correlation analysis
+- Outlier detection (IQR method)
+- **AI-Generated Insights** via Azure OpenAI
+
+### Reporting Agent
+Generates comprehensive reports:
+- Markdown format with tables
+- Dataset overview and quality warnings
+- Column-level analysis
+- AI-generated recommendations
+
+### Memory System (ChromaDB)
+Persistent context storage:
+- Stores workflow results and insights
+- Enables context retrieval for future runs
+- Semantic search across stored knowledge
+
+---
+
+## 📊 CLI Commands
+
+```bash
+# Initialize project structure
+python autods_cli.py init
+
+# List registered datasets
+python autods_cli.py datasets
+
+# Show configuration
+python autods_cli.py config
+
+# Run a workflow
+python autods_cli.py run --dataset DATASET_NAME --goal eda_report
+```
+
+---
+
+## 📝 Adding Datasets
+
+Edit `datasets.yaml` to register new datasets:
+
+```yaml
+datasets:
+  # Local file
+  my_data:
+    uri: local:./data/my_data.csv
+    format: csv
+    description: My dataset description
+
+  # Remote URL
+  external_data:
+    uri: https://example.com/data.csv
+    format: csv
+    description: External dataset from URL
+```
+
+---
+
+## 🏗️ Architecture Principles
+
+- **Local-First**: All processing happens locally; no cloud storage required
+- **Azure OpenAI Only**: LLM is the only external service dependency
+- **Modular Agents**: Each agent has a single responsibility
+- **Persistent Memory**: ChromaDB enables context-aware analysis
+- **Deterministic Code**: All data transformations are deterministic Python code
+- **LLM for Insights**: AI generates explanations, not execution logic
+
+---
+
+## 📈 Sample Output
+
+Running `python autods_cli.py run --dataset demo_sales --goal eda_report` produces:
+
+```
+============================================================
+🤖 AutoDS - Multi-Agent Data Science Platform
+============================================================
+Dataset: demo_sales
+Goal: eda_report
+
+[Orchestrator] Starting workflow...
+[Ingestion Agent] ✓ Loaded 30 rows, 10 columns
+[EDA Agent] ✓ Analysis complete. Found 6 warnings.
+[Reporting Agent] ✓ Report saved to: reports/demo_sales_20251201.md
+
+============================================================
+✓ Workflow completed successfully!
+  Time: 7.60 seconds
+  Report: reports/demo_sales_20251201.md
+============================================================
+```
+
+---
+
+## 🔮 Roadmap
+
+### Phase 3: Memory Integration
+- Context injection into LLM prompts
+- Memory retrieval before each agent call
+- Cross-run learning and recommendations
+
+### Phase 4: Data Cleaning & Feature Engineering
+- Rule-based cleaning agent
+- Feature transformation pipelines
+- LLM-generated cleaning explanations
+
+### Phase 5: Modeling & Explainability
+- scikit-learn model training
+- SHAP/LIME explainability
+- Hyperparameter tuning
+
+### Phase 6: Deployment
+- FastAPI model serving
+- Prediction logging
+- Drift detection
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 🙏 Acknowledgments
+
+- [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) - LLM backend
+- [ChromaDB](https://www.trychroma.com/) - Vector database for memory
+- [Click](https://click.palletsprojects.com/) - CLI framework
+- [Pydantic](https://docs.pydantic.dev/) - Data validation
