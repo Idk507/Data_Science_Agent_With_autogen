@@ -1,0 +1,39 @@
+# Core dependencies
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pyyaml>=6.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Azure OpenAI
+openai>=1.0.0
+
+# Autogen Multi-Agent Framework
+pyautogen>=0.2.0
+
+# ChromaDB for memory
+chromadb>=0.4.0
+
+# ML & Model Building
+scikit-learn>=1.3.0
+optuna>=3.4.0
+joblib>=1.3.0
+
+# Explainability (optional)
+# shap>=0.42.0
+# lime>=0.2.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Reporting
+jinja2>=3.1.0
+
+# CLI
+click>=8.1.0
+
+# HTTP requests for URL data sources
+requests>=2.31.0
