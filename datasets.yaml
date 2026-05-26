@@ -1,0 +1,19 @@
+# AutoDS Dataset Registry
+# Format: dataset_name: source_uri
+# 
+# Source types:
+#   local:./path/to/file.csv - Local file
+#   https://url.com/data.csv - URL
+#
+# Examples below:
+
+datasets:
+  demo_sales:
+    uri: local:./data/demo_sales.csv
+    format: csv
+    description: Sample sales data for testing
+
+  titanic:
+    uri: https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
+    format: csv
+    description: Titanic passenger survival dataset from URL
